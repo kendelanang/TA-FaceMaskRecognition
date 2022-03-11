@@ -13,7 +13,7 @@ import scipy
 import time
 
 def detect_and_predict_mask(frame, faceNet, maskNet, MyFaceNet):
-	# grab the dimensions of the frame and then construct a blob from it
+	# grab the dimensions of the frame and then construct a blob from it tambahh
 	(h, w) = frame.shape[:2]
 	blob = cv2.dnn.blobFromImage(frame, 1.0, (160, 160), (104.0, 177.0, 123.0))
 
