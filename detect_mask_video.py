@@ -1,5 +1,6 @@
 # import the necessary packages
 from PIL import Image
+import tensorflow as tf
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 from tensorflow.keras.preprocessing.image import img_to_array
 from tensorflow.keras.models import load_model
@@ -141,3 +142,4 @@ while True:
 # do a bit of cleanup
 cv2.destroyAllWindows()
 vs.stop()
+print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
