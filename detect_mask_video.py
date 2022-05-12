@@ -124,12 +124,12 @@ while True:
 		cv2.putText(frame, label, (startX, startY - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.45, color, 2)
 		cv2.putText(frame, identity, (startX, startY - 100), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
 		cv2.rectangle(frame, (startX, startY), (endX, endY), color, 2)
-		print(identity)
+		#print(identity)
 
 	# menampilkan FPS
 	endtimer = time.time()
 	fps = 1/(endtimer-timer)
-	cv2.putText(frame, "{:.2f}FPS".format(fps), (20, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2)
+	#cv2.putText(frame, "{:.2f}FPS".format(fps), (20, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2)
 
 	# show the output frame
 	cv2.imshow("Kendelanang Mask and Face Recognition", frame)
@@ -142,4 +142,3 @@ while True:
 # do a bit of cleanup
 cv2.destroyAllWindows()
 vs.stop()
-print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))

@@ -55,5 +55,4 @@ myfile = open("data.pkl", "wb")
 pickle.dump(database, myfile)
 myfile.close()
 
-#database
 
