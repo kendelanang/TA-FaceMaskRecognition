@@ -2,20 +2,23 @@
 #include <Wire.h> 
 #include <LiquidCrystal_I2C.h>
 #include <Adafruit_MLX90614.h>
-
-LiquidCrystal_I2C lcd(0x27,16,2);
-Adafruit_MLX90614 mlx = Adafruit_MLX90614();
+#include <Servo.h>
 
 #define TRIGGER_PIN  9
 #define ECHO_PIN     10
 #define MAX_DISTANCE 99 // Maximum distance we want to measure (in centimeters).
 
+LiquidCrystal_I2C lcd(0x27,16,2);
+Adafruit_MLX90614 mlx = Adafruit_MLX90614();
+Servo myservo;
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // NewPing setup of pins and maximum distance.
 
 boolean simpan = false;
+int pos = 0;
 
 void setup() {
   Serial.begin(9600);
+  myservo.attach(11);
   mlx.begin();
   lcd.begin(); // Initialize display  
   lcd.backlight(); // connecting backlight
@@ -35,7 +38,7 @@ void loop() {
     diam();
   }
 
-  if (distance >= 1 && distance <= 30){
+  if (distance >= 1 && distance <= 20){
     ceksuhu();
   }
   
@@ -57,16 +60,17 @@ void diam(){
   lcd.print("DEKATKAN WAJAH ANDA UNTUK CEK SUHU.....");
   lcd.scrollDisplayLeft();
   delay(100);
+  simpan = false;
 }
 
 void ceksuhu(){
-  float suhucek = mlx.readObjectTempC();
+  float suhucek = mlx.readObjectTempC()+1;
   lcd.clear();
   lcd.setCursor(0,0); // Setting the cursor to the beginning of the second line
   lcd.print(" TUNGGU SEBENTAR");
   lcd.setCursor(0,1);
   lcd.print(" SEDANG CEK SUHU");
-  delay(2000);
+  delay(3000);
   
   if (suhucek <= 37){
     lcd.clear();
@@ -76,6 +80,7 @@ void ceksuhu(){
     lcd.print("SUHU NORMAL");
     delay(3000);
     scanwajah();
+    bukapintu();
   }
   else {
     lcd.clear();
@@ -97,6 +102,15 @@ void scanwajah(){
     lcd.setCursor(0,1); 
     lcd.print(x);
     simpan = true;
+    
     delay(5000);
   }
+}
+
+void bukapintu(){
+  delay(1000);
+  myservo.write(90);
+  delay(5000);
+  myservo.write(0);
+  
 }
