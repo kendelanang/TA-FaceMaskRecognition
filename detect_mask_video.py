@@ -12,6 +12,10 @@ import cv2
 import pickle
 import scipy
 import time
+import serial
+
+ser = serial.Serial('COM3',9600)
+ser.timeout = 1
 
 def detect_and_predict_mask(frame, faceNet, maskNet, MyFaceNet):
 	# grab the dimensions of the frame and then construct a blob from it tambahh
@@ -96,7 +100,7 @@ while True:
 	timer = time.time()
 
 	min_dist=100
-	identity=' '
+	identity=''
 
 	# detect faces in the frame and determine if they are wearing a face mask or not
 	(locs, preds, signature) = detect_and_predict_mask(frame, faceNet, maskNet, MyFaceNet)
@@ -124,11 +128,14 @@ while True:
 		cv2.putText(frame, label, (startX, startY - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.45, color, 2)
 		cv2.putText(frame, identity, (startX, startY - 100), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
 		cv2.rectangle(frame, (startX, startY), (endX, endY), color, 2)
-		#print(identity)
+		print(identity)
+		
+	ser.write(str(identity+'.').encode())
 
 	# menampilkan FPS
 	endtimer = time.time()
 	fps = 1/(endtimer-timer)
+	
 	#cv2.putText(frame, "{:.2f}FPS".format(fps), (20, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2)
 
 	# show the output frame
@@ -138,6 +145,8 @@ while True:
 	k = cv2.waitKey(5) & 0xFF
 	if k == 27:
 		break
+
+	
 
 # do a bit of cleanup
 cv2.destroyAllWindows()

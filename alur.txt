@@ -1,0 +1,4 @@
+flowchart mini
+
+lcd menampilkan tulisan selamat datang (menunggu ada orang dan ngeliatin wajah)
+
