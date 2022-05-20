@@ -16,15 +16,13 @@ import time
 import serial
 import gtts
 from playsound import playsound
+from pygame import mixer
 import os
 
 ser = serial.Serial('COM3',9600)
 ser.timeout = 1
-startmarker = '<'
-endmarker = '>'
 simpan = False
-audiofile1 = os.path.dirname('D:/TUGAS AKHIR!/Face-Mask-Detection-master/')+'sebutnama.mp3'
-audiofile2 = os.path.dirname('D:/TUGAS AKHIR!/Face-Mask-Detection-master/')+ 'nomask.mp3'
+
 
 def detect_and_predict_mask(frame, faceNet, maskNet, MyFaceNet):
 	# grab the dimensions of the frame and then construct a blob from it tambahh
@@ -95,7 +93,7 @@ myfile.close()
 
 # initialize the video stream
 print("[INFO] starting video stream...")
-vs = VideoStream(src=0).start()
+vs = VideoStream(src=1).start()
 
 # loop over the frames from the video stream
 while True:
@@ -103,6 +101,8 @@ while True:
 		ser.open()
 	
 	# grab the frame from the threaded video stream and resize it to have a maximum width of 1280 pixels
+	# width = 800
+	# height = 600
 	width = 1280
 	height = 720
 	dim = (width, height)
@@ -148,18 +148,30 @@ while True:
 			if rabel == "Mask" and simpan == False:
 				ser.write(str(identity+">").encode())
 				simpan = True
-				#time.sleep(1)
+				time.sleep(1)
 				tts = gtts.gTTS("SELAMAT DATANG"+identity+". SILAHKAN MASUK", lang="id")
 				tts.save("sebutnama.mp3")
-				playsound('D:/TUGAS AKHIR!/Face-Mask-Detection-master/sebutnama.mp3')
+				#playsound('D:/TUGAS AKHIR!/Face-Mask-Detection-master/sebutnama.mp3')
+				mixer.init()
+				mixer.music.load("sebutnama.mp3")
+				mixer.music.play()
 				os.remove("sebutnama.mp3")
+
+				# tts.save('C:/Users/iya/Documents/GitHub/TA-FaceMaskRecognition/sebutnama.mp3')
+				# playsound('C:/Users/iya/Documents/GitHub/TA-FaceMaskRecognition/sebutnama.mp3')
+				# os.remove('C:/Users/iya/Documents/GitHub/TA-FaceMaskRecognition/sebutnama.mp3')
+				
 				ser.close()
 			
 			if rabel == "No Mask" and simpan == False:
 				ser.write(str(rabel+">").encode())
 				simpan = True
-				#time.sleep(1)
-				playsound('D:/TUGAS AKHIR!/Face-Mask-Detection-master/nomask.mp3')
+				time.sleep(1)
+				mixer.init()
+				mixer.music.load("nomask.mp3")
+				mixer.music.play()
+				#playsound('D:/TUGAS AKHIR!/Face-Mask-Detection-master/nomask.mp3')
+				# playsound('C:/Users/iya/Documents/GitHub/TA-FaceMaskRecognition/nomask.mp3')
 				ser.close()
 			    
 
