@@ -1,11 +1,12 @@
 # import the necessary packages
+from re import T
 from PIL import Image
 import tensorflow as tf
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 from tensorflow.keras.preprocessing.image import img_to_array
 from tensorflow.keras.models import load_model
 from imutils.video import VideoStream
-from numpy import asarray
+from numpy import asarray, block
 from numpy import expand_dims
 import numpy as np
 import cv2
@@ -13,9 +14,17 @@ import pickle
 import scipy
 import time
 import serial
+import gtts
+from playsound import playsound
+import os
 
 ser = serial.Serial('COM3',9600)
 ser.timeout = 1
+startmarker = '<'
+endmarker = '>'
+simpan = False
+audiofile1 = os.path.dirname('D:/TUGAS AKHIR!/Face-Mask-Detection-master/')+'sebutnama.mp3'
+audiofile2 = os.path.dirname('D:/TUGAS AKHIR!/Face-Mask-Detection-master/')+ 'nomask.mp3'
 
 def detect_and_predict_mask(frame, faceNet, maskNet, MyFaceNet):
 	# grab the dimensions of the frame and then construct a blob from it tambahh
@@ -90,6 +99,9 @@ vs = VideoStream(src=0).start()
 
 # loop over the frames from the video stream
 while True:
+	if(ser.is_open == False):
+		ser.open()
+	
 	# grab the frame from the threaded video stream and resize it to have a maximum width of 1280 pixels
 	width = 1280
 	height = 720
@@ -119,6 +131,7 @@ while True:
 
 		# determine the class label and color we'll use to draw the bounding box and text
 		label = "Mask" if mask > withoutMask else "No Mask"
+		rabel = label
 		color = (0, 255, 0) if label == "Mask" else (0, 0, 255)
 
 		# include the probability in the label
@@ -128,9 +141,27 @@ while True:
 		cv2.putText(frame, label, (startX, startY - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.45, color, 2)
 		cv2.putText(frame, identity, (startX, startY - 100), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
 		cv2.rectangle(frame, (startX, startY), (endX, endY), color, 2)
-		#print(identity)
 		
-	ser.write(str(identity+'.').encode())
+		print(ser.in_waiting)
+		if ser.in_waiting>0:
+			simpan = False
+			if rabel == "Mask" and simpan == False:
+				ser.write(str(identity+">").encode())
+				simpan = True
+				#time.sleep(1)
+				tts = gtts.gTTS("SELAMAT DATANG"+identity+". SILAHKAN MASUK", lang="id")
+				tts.save("sebutnama.mp3")
+				playsound('D:/TUGAS AKHIR!/Face-Mask-Detection-master/sebutnama.mp3')
+				os.remove("sebutnama.mp3")
+				ser.close()
+			
+			if rabel == "No Mask" and simpan == False:
+				ser.write(str(rabel+">").encode())
+				simpan = True
+				#time.sleep(1)
+				playsound('D:/TUGAS AKHIR!/Face-Mask-Detection-master/nomask.mp3')
+				ser.close()
+			    
 
 	# menampilkan FPS
 	endtimer = time.time()

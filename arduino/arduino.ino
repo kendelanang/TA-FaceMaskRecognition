@@ -14,7 +14,7 @@ Servo myservo;
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // NewPing setup of pins and maximum distance.
 
 boolean simpan = false;
-int pos = 0;
+int pos = 90;
 
 void setup() {
   Serial.begin(9600);
@@ -41,16 +41,6 @@ void loop() {
   if (distance >= 1 && distance <= 20){
     ceksuhu();
   }
-  
-//  Serial.print("Jarak: ");
-//  lcd.setCursor(0,0); // Set the cursor to the beginning of the first line
-//  lcd.print("Jarak : "); lcd.print(distance); lcd.print(" cm");// Typing text on the first line
-//  lcd.setCursor(0,1); // Setting the cursor to the beginning of the second line
-//  lcd.print("Suhu : "); lcd.print(mlx.readObjectTempC()); lcd.print(" C");
-//  Serial.print(distance); Serial.println("cm");
-
-  //Serial.println(x);
-
 }
 
 void diam(){
@@ -75,17 +65,22 @@ void ceksuhu(){
   if (suhucek <= 37){
     lcd.clear();
     lcd.setCursor(0,0); // Setting the cursor to the beginning of the second line
-    lcd.print("SUHU ANDA : "); lcd.print(suhucek); lcd.print(" C");
+    lcd.print("SUHU : "); lcd.print(suhucek); lcd.print(" "); lcd.print((char)223); lcd.print("C");
     lcd.setCursor(0,1);
-    lcd.print("SUHU NORMAL");
+    lcd.print("SUHU ANDA NORMAL");
+    delay(3000);
+    lcd.clear();
+    lcd.setCursor(0,0); // Setting the cursor to the beginning of the second line
+    lcd.print("SILAHKAN MUNDUR");
+    lcd.setCursor(0,1);
+    lcd.print("UNTUK SCAN WAJAH");
     delay(3000);
     scanwajah();
-    bukapintu();
   }
   else {
     lcd.clear();
     lcd.setCursor(0,0); // Setting the cursor to the beginning of the second line
-    lcd.print("SUHU ANDA : "); lcd.print(suhucek); lcd.print(" C");
+    lcd.print("SUHU : "); lcd.print(suhucek); lcd.print(" C");
     lcd.setCursor(0,1);
     lcd.print("SUHU TIDAK NORMAL");
     delay(3000);
@@ -94,23 +89,38 @@ void ceksuhu(){
 }
 
 void scanwajah(){
+  Serial.write("cekwajah");
+  delay(1000);
   if (Serial.available()>0 && simpan == false){
-    String x = Serial.readStringUntil('.');
-    lcd.clear();
-    lcd.setCursor(0,0); // Setting the cursor to the beginning of the second line
-    lcd.print("SILAHKAN MASUK"); 
-    lcd.setCursor(0,1); 
-    lcd.print(x);
-    simpan = true;
-    
-    delay(5000);
+    String x = Serial.readStringUntil('>');
+    if (x != "No Mask"){
+      lcd.clear();
+      lcd.setCursor(0,0); // Setting the cursor to the beginning of the second line
+      lcd.print("SILAHKAN MASUK"); 
+      lcd.setCursor(0,1); 
+      lcd.print(x);
+      simpan = true;
+      Serial.flush();
+      bukapintu();
+      delay(5000);
+    }
+    else{
+      lcd.clear();
+      lcd.setCursor(0,0); // Setting the cursor to the beginning of the second line
+      lcd.print(" TOLONG GUNAKAN"); 
+      lcd.setCursor(0,1); 
+      lcd.print("MASKER DGN BENAR");
+      simpan = false;
+      Serial.flush();
+      delay(5000);
+      diam();
+    }
   }
 }
 
 void bukapintu(){
   delay(1000);
-  myservo.write(90);
-  delay(5000);
   myservo.write(0);
-  
+  delay(5000);
+  myservo.write(90);
 }
