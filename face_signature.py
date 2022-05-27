@@ -6,7 +6,6 @@ from numpy import expand_dims
 from matplotlib import pyplot
 from keras.models import load_model
 import numpy as np
-
 import pickle
 import cv2
 
