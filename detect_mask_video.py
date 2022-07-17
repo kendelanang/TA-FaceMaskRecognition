@@ -35,6 +35,8 @@ firebaseConfig={
 
 firebase = pyrebase.initialize_app(firebaseConfig)
 storage = firebase.storage()
+realtimedb = firebase.database()
+jumlahLogin = realtimedb.child("cobi/TLogin").get()
 
 path_on_cloud = "userImage/"
 path_local = "fotoPeserta/"
@@ -223,6 +225,7 @@ def absensiWajah():
 			cv2.rectangle(frame, (startX, startY), (endX, endY), color, 2)
 
 			bacanama()
+			#bacalogin()
 			
 			#print(ser.in_waiting)
 			if ser.in_waiting>0:
@@ -290,6 +293,15 @@ def daftar():
 	Daftar_text.set("Mulai Capture")
 	Daftar_btn.place(x = 252, y = 210)
 
+def bacalogin():
+	jmlLogin.config(text="Jumlah Login : "+str(jumlahLogin.val()))
+
+def stream_handler(message):
+	jmlLogin.config(text="Jumlah Login : "+str(message["data"]))
+    #print(message["data"]) # {'title': 'Pyrebase', "body": "etc..."}
+
+my_stream = realtimedb.child("cobi/TLogin").stream(stream_handler)
+
 
 root = tk.Tk()
 root.title("Deteksi Penggunaan Masker GUI")
@@ -305,14 +317,16 @@ canvas.create_window(350, 80, window=judul)
 made = tk.Label(root, text="Dikembangkan Oleh Rafael Alferdyas Putra", font=("Montserrat",13), bg="black",fg="white")
 canvas.create_window(360, 20, window=made)
 
-global intructions
+global intructions, jmlLogin
 
 # tombol untuk Daftarkan data wajah
 intructions = tk.Label(root, text="Selamat Datang", font=("Montserrat",15),fg="white",bg="black")
 canvas.create_window(370, 300, window=intructions)
+jmlLogin = tk.Label(root, text="Jumlah Login : ", font=("Montserrat",10),fg="white",bg="black")
+canvas.create_window(70, 20, window=jmlLogin)
 Rekam_text = tk.StringVar()
-Rekam_btn = tk.Button(root, textvariable=Rekam_text, font="Montserrat", bg="#20bebe", fg="white", height=1, width=15, command=daftar)
-Rekam_text.set("Daftarkan Wajah")
+Rekam_btn = tk.Button(root, textvariable=Rekam_text, font="Montserrat", bg="#20bebe", fg="white", height=1, width=15, command=bacalogin)
+Rekam_text.set("Refresh")
 Rekam_btn.grid(column=0, row=7)
 
 # tombol untuk training wajah

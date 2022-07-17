@@ -6,12 +6,12 @@
 
 #define TRIGGER_PIN  9
 #define ECHO_PIN     10
-#define MAX_DISTANCE 99 // Maximum distance we want to measure (in centimeters).
+#define MAX_DISTANCE 99
 
 LiquidCrystal_I2C lcd(0x27,16,2);
 Adafruit_MLX90614 mlx = Adafruit_MLX90614();
 Servo myservo;
-NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // NewPing setup of pins and maximum distance.
+NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 
 boolean simpan = false;
 int pos = 90;
@@ -20,31 +20,27 @@ void setup() {
   Serial.begin(9600);
   myservo.attach(11);
   mlx.begin();
-  lcd.begin(); // Initialize display  
-  lcd.backlight(); // connecting backlight
-  lcd.setCursor(0,0); // Set the cursor to the beginning of the first line
+  lcd.begin();
+  lcd.backlight();
+  lcd.setCursor(0,0);
   lcd.print(" SELAMAT DATANG ");
-  lcd.setCursor(0,1); // Setting the cursor to the beginning of the second line
-  lcd.print("DI SALTY SPITON."); // Typing on the second line
+  lcd.setCursor(0,1);
+  lcd.print("________________");
   delay(5000);
   lcd.clear();
 }
 
 void loop() {
-  delay(500); // Wait 50ms between pings (about 20 pings/sec). 29ms should be the shortest delay between pings.
-  int distance = sonar.ping_cm(); // Send ping, get distance in cm and print result (0 = outside set distance range)
+  delay(500);
+  int distance = sonar.ping_cm();
 
-  if (distance == 0 || distance>=30){
-    diam();
-  }
+  if (distance == 0 || distance>=30){ diam(); }
 
-  if (distance >= 1 && distance <= 20){
-    ceksuhu();
-  }
+  if (distance >= 1 && distance <= 20){ ceksuhu(); }
 }
 
 void diam(){
-  lcd.setCursor(0,0); // Setting the cursor to the beginning of the second line
+  lcd.setCursor(0,0);
   lcd.print("_______________________________________");
   lcd.setCursor(0,1);
   lcd.print("DEKATKAN WAJAH ANDA UNTUK CEK SUHU.....");
@@ -56,7 +52,7 @@ void diam(){
 void ceksuhu(){
   float suhucek = mlx.readObjectTempC()+1;
   lcd.clear();
-  lcd.setCursor(0,0); // Setting the cursor to the beginning of the second line
+  lcd.setCursor(0,0);
   lcd.print(" TUNGGU SEBENTAR");
   lcd.setCursor(0,1);
   lcd.print(" SEDANG CEK SUHU");
@@ -64,13 +60,13 @@ void ceksuhu(){
   
   if (suhucek <= 37){
     lcd.clear();
-    lcd.setCursor(0,0); // Setting the cursor to the beginning of the second line
+    lcd.setCursor(0,0);
     lcd.print("SUHU : "); lcd.print(suhucek); lcd.print(" "); lcd.print((char)223); lcd.print("C");
     lcd.setCursor(0,1);
     lcd.print("SUHU ANDA NORMAL");
     delay(3000);
     lcd.clear();
-    lcd.setCursor(0,0); // Setting the cursor to the beginning of the second line
+    lcd.setCursor(0,0);
     lcd.print("SILAHKAN MUNDUR");
     lcd.setCursor(0,1);
     lcd.print("UNTUK SCAN WAJAH");
@@ -95,7 +91,7 @@ void scanwajah(){
     String x = Serial.readStringUntil('>');
     if (x != "No Mask"){
       lcd.clear();
-      lcd.setCursor(0,0); // Setting the cursor to the beginning of the second line
+      lcd.setCursor(0,0);
       lcd.print("SILAHKAN MASUK"); 
       lcd.setCursor(0,1); 
       lcd.print(x);
@@ -106,7 +102,7 @@ void scanwajah(){
     }
     else{
       lcd.clear();
-      lcd.setCursor(0,0); // Setting the cursor to the beginning of the second line
+      lcd.setCursor(0,0);
       lcd.print(" TOLONG GUNAKAN"); 
       lcd.setCursor(0,1); 
       lcd.print("MASKER DGN BENAR");
