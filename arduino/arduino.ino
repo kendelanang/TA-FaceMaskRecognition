@@ -14,11 +14,12 @@ Servo myservo;
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 
 boolean simpan = false;
-int pos = 90;
+int pos = 0;
 
 void setup() {
   Serial.begin(9600);
   myservo.attach(11);
+  myservo.write(0);
   mlx.begin();
   lcd.begin();
   lcd.backlight();
@@ -50,7 +51,7 @@ void diam(){
 }
 
 void ceksuhu(){
-  float suhucek = mlx.readObjectTempC()+1;
+  float suhucek = mlx.readObjectTempC()+2;
   lcd.clear();
   lcd.setCursor(0,0);
   lcd.print(" TUNGGU SEBENTAR");
@@ -116,7 +117,7 @@ void scanwajah(){
 
 void bukapintu(){
   delay(1000);
-  myservo.write(0);
-  delay(5000);
   myservo.write(90);
+  delay(5000);
+  myservo.write(0);
 }

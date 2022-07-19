@@ -57,7 +57,7 @@ MyFaceNet = load_model('facenet_keras.h5')
 HaarCascade = cv2.CascadeClassifier(cv2.samples.findFile(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml'))
 
 # Folder Foto Sser
-folder='fotoPeserta/userImage'
+folder='fotoPeserta/userImage/'
 database = {}
 
 # Load Database Face

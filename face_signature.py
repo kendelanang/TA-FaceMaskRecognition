@@ -13,7 +13,7 @@ import cv2
 HaarCascade = cv2.CascadeClassifier(cv2.samples.findFile(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml'))
 MyFaceNet = load_model('facenet_keras.h5')
 
-folder='fotoPeserta/'
+folder='fotoPeserta/userImage/'
 database = {}
 
 for filename in listdir(folder):
