@@ -37,7 +37,7 @@ void loop() {
 
   if (distance == 0 || distance>=30){ diam(); }
 
-  if (distance >= 1 && distance <= 20){ ceksuhu(); }
+  if (distance >= 1 && distance <= 5){ ceksuhu(); }
 }
 
 void diam(){
@@ -51,13 +51,13 @@ void diam(){
 }
 
 void ceksuhu(){
-  float suhucek = mlx.readObjectTempC()+2;
   lcd.clear();
   lcd.setCursor(0,0);
   lcd.print(" TUNGGU SEBENTAR");
   lcd.setCursor(0,1);
   lcd.print(" SEDANG CEK SUHU");
   delay(3000);
+  float suhucek = mlx.readObjectTempC()+2.5;
   
   if (suhucek <= 37){
     lcd.clear();
