@@ -67,7 +67,7 @@ myfile.close()
 
 # initialize the video stream
 print("[INFO] Program Dimulai...")
-vs = VideoStream(src=0).start()
+vs = VideoStream(src=1).start()
 
 def detect_and_predict_mask(frame, faceNet, maskNet, MyFaceNet):
 	# grab the dimensions of the frame and then construct a blob from it
