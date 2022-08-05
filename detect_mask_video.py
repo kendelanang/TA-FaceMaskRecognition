@@ -9,7 +9,7 @@ import serial
 import scipy
 import time
 import tkinter as tk
-from imutils.video import VideoStream
+from imutils.video import VideoStream, FileVideoStream
 from keras.models import load_model
 from numpy import asarray, identity
 from numpy import expand_dims
@@ -113,7 +113,8 @@ def detect_and_predict_mask(frame, faceNet, maskNet, MyFaceNet):
 
 	# only make a predictions if at least one face was detected
 	if len(faces) > 0:
-		# for faster inference we'll make batch predictions on *all* faces at the same time rather than one-by-one predictions in the above `for` loop
+		# for faster inference we'll make batch predictions on *all* faces at the same 
+		# time rather than one-by-one predictions in the above `for` loop
 		faces = np.array(faces, dtype="float32")
 		preds = maskNet.predict(faces, batch_size=32)
 		signature = MyFaceNet.predict(faces, batch_size=32)

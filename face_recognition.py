@@ -16,7 +16,7 @@ myfile = open("data.pkl", "rb")
 database = pickle.load(myfile)
 myfile.close()
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 
 while(1):
     _, gbr1 = cap.read()
